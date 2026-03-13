@@ -123,11 +123,24 @@ cursor:pointer;
 .sugItem:hover{
 background:#fff0f7;
 }
+
+display:inline-block;
+padding:6px 10px;
+margin:3px;
+border-radius:8px;
+background:#ffd6ea;
+color:#ff3d8b;
+text-decoration:none;
+font-weight:bold;
+}
+background:#ff9ecf;
+color:white;
+}
 </style>
 </head>
 <body>
 <h1>🧋 MewTea Công Thức</h1>
-<input id="search" placeholder="🔎 Tìm món..."/><div id="resultCount"></div><div id="suggest"></div>
+<div id="searchWrap" style="display:flex;gap:8px;align-items:center;margin-bottom:10px;"><input id="search" placeholder="🔎 Tìm món..."/><button id="clearSearch" style="padding:10px 14px;border:none;border-radius:10px;background:#ff9ecf;color:white;font-size:16px;cursor:pointer;">❌</button></div><div id="resultCount"></div><div id="suggest"></div>
 <!-- TRÀ SỮA FULL TOPPING -->
 <div class="card">
 <div class="name">🧋 Trà Sữa Full Topping</div>
@@ -505,7 +518,6 @@ function toTop(){window.scrollTo({top:0,behavior:"smooth"});}
 
 </script>
 <button id="topBtn" onclick="toTop()">⬆</button>
-
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -532,5 +544,12 @@ title.insertAdjacentElement("afterend", counter);
 
 });
 </script>
-</body>
+<script>
+document.getElementById("clearSearch").onclick=function(){
+const s=document.getElementById("search");
+s.value="";
+s.dispatchEvent(new Event("keyup"));
+s.focus();
+};
+</script></body>
 </html>
