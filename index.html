@@ -532,18 +532,27 @@ s.focus();
 
 <script>
 
+function normalize(str){
+return str.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+}
+
 const search = document.getElementById("search");
 const cards = document.querySelectorAll(".card");
 const resultCount = document.getElementById("resultCount");
+const suggest = document.getElementById("suggest");
+
+function getNames(){
+return Array.from(document.querySelectorAll(".card .name")).map(e=>e.innerText);
+}
 
 const TOTAL = cards.length;
 
 function filter(){
-let keyword = search.value.toLowerCase();
+let keyword = normalize(search.value);
 let visible = 0;
 
 cards.forEach(card=>{
-let text = card.textContent.toLowerCase();
+let text = normalize(card.textContent);
 
 if(text.includes(keyword)){
 card.style.display="block";
@@ -560,9 +569,31 @@ resultCount.innerText = "🔎 Tìm thấy " + visible + " món";
 }
 }
 
-search.addEventListener("keyup", filter);
+function showSuggest(){
+let k = normalize(search.value);
+suggest.innerHTML="";
+if(k.length<1) return;
 
-window.onload = ()=>{
+let names=getNames();
+
+names.forEach(n=>{
+if(normalize(n).includes(k)){
+let d=document.createElement("div");
+d.className="sugItem";
+d.innerText=n;
+d.onclick=()=>{
+search.value=n;
+filter();
+suggest.innerHTML="";
+};
+suggest.appendChild(d);
+}
+});
+}
+
+search.addEventListener("keyup",()=>{filter();showSuggest();});
+
+window.onload=()=>{
 search.focus();
 filter();
 };
