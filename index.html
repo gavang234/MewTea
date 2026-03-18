@@ -459,7 +459,6 @@ Size M/L: 1 cục phô mai bò quét ly
 <td>(M) 40syro dâu + 10đg + 10 nước + 1 tắc + 150 lục trà<br/>(L) 50 syro dâu + 20đg + 20 nước + 1 tắc + 180 lục trà</td>
 <td>(M) 40syro dâu + 10 nước + 1 tắc + 170 lục trà<br/>(L) 50syro dâu + 10đg + 20 nước + 1 tắc + 190 lục trà</td>
 </tr></table></div>
-
 <button id="topBtn" onclick="toTop()">⬆</button>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
@@ -529,76 +528,44 @@ s.dispatchEvent(new Event("keyup"));
 s.focus();
 };
 </script>
-<script>
 
-function initApp(){
+
+<script>
 
 const search = document.getElementById("search");
 const cards = document.querySelectorAll(".card");
 const resultCount = document.getElementById("resultCount");
-const suggest = document.getElementById("suggest");
 
-function getNames(){
-return Array.from(document.querySelectorAll(".card .name")).map(e=>e.innerText);
-}
+const TOTAL = cards.length;
 
 function filter(){
 let keyword = search.value.toLowerCase();
-let visible=0;
+let visible = 0;
 
 cards.forEach(card=>{
-card.classList.remove("highlight");
-let text=card.textContent.toLowerCase();
+let text = card.textContent.toLowerCase();
 
 if(text.includes(keyword)){
 card.style.display="block";
 visible++;
-if(keyword.length>0) card.classList.add("highlight");
 }else{
 card.style.display="none";
 }
 });
 
-resultCount.innerText="🔎 Tìm thấy "+visible+" món";
+if(keyword.length === 0){
+resultCount.innerText = "📋 Tổng: " + TOTAL + " món";
+}else{
+resultCount.innerText = "🔎 Tìm thấy " + visible + " món";
+}
 }
 
-function showSuggest(){
-let k=search.value.toLowerCase();
-suggest.innerHTML="";
-if(k.length<1) return;
+search.addEventListener("keyup", filter);
 
-let names=getNames();
-
-names.forEach(n=>{
-if(n.toLowerCase().includes(k)){
-let d=document.createElement("div");
-d.className="sugItem";
-d.innerText=n;
-d.onclick=()=>{
-search.value=n;
-filter();
-suggest.innerHTML="";
-};
-suggest.appendChild(d);
-}
-});
-}
-
-search.addEventListener("keyup",()=>{
-filter();
-showSuggest();
-});
-
-search.addEventListener("focus",showSuggest);
-
-window.onload=()=>{
+window.onload = ()=>{
 search.focus();
 filter();
 };
-
-}
-
-document.addEventListener("DOMContentLoaded", initApp);
 
 </script>
 </body>
