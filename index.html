@@ -459,64 +459,7 @@ Size M/L: 1 cục phô mai bò quét ly
 <td>(M) 40syro dâu + 10đg + 10 nước + 1 tắc + 150 lục trà<br/>(L) 50 syro dâu + 20đg + 20 nước + 1 tắc + 180 lục trà</td>
 <td>(M) 40syro dâu + 10 nước + 1 tắc + 170 lục trà<br/>(L) 50syro dâu + 10đg + 20 nước + 1 tắc + 190 lục trà</td>
 </tr></table></div>
-<script>
 
-const search = document.getElementById("search");
-const cards = document.querySelectorAll(".card");
-const resultCount = document.getElementById("resultCount");
-const suggest = document.getElementById("suggest");
-
-let names = Array.from(cards).map(c=>c.querySelector(".name").innerText);
-
-function filter(){
-let keyword = search.value.toLowerCase();
-let visible=0;
-
-cards.forEach(card=>{
-card.classList.remove("highlight");
-let text=card.textContent.toLowerCase();
-
-if(text.includes(keyword)){
-card.style.display="block";
-visible++;
-if(keyword.length>0) card.classList.add("highlight");
-}else{
-card.style.display="none";
-}
-});
-
-resultCount.innerText="🔎 Tìm thấy "+visible+" món";
-}
-
-function showSuggest(){
-let k=search.value.toLowerCase();
-suggest.innerHTML="";
-if(k.length<1) return;
-
-names.forEach(n=>{
-if(n.toLowerCase().includes(k)){
-let d=document.createElement("div");
-d.className="sugItem";
-d.innerText=n;
-d.onclick=()=>{search.value=n;filter();suggest.innerHTML="";};
-suggest.appendChild(d);
-}
-});
-}
-
-search.addEventListener("keyup",()=>{filter();showSuggest();});
-
-window.onload=()=>{search.focus();filter();};
-
-window.onscroll=()=>{
-let btn=document.getElementById("topBtn");
-if(document.documentElement.scrollTop>400){btn.style.display="block";}
-else{btn.style.display="none";}
-}
-
-function toTop(){window.scrollTo({top:0,behavior:"smooth"});}
-
-</script>
 <button id="topBtn" onclick="toTop()">⬆</button>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
@@ -544,7 +487,6 @@ title.insertAdjacentElement("afterend", counter);
 
 });
 </script>
-
 <div class="card">
 <div class="name">🍈 Trà Mãng Cầu</div>
 <table>
@@ -586,5 +528,78 @@ s.value="";
 s.dispatchEvent(new Event("keyup"));
 s.focus();
 };
-</script></body>
+</script>
+<script>
+
+function initApp(){
+
+const search = document.getElementById("search");
+const cards = document.querySelectorAll(".card");
+const resultCount = document.getElementById("resultCount");
+const suggest = document.getElementById("suggest");
+
+function getNames(){
+return Array.from(document.querySelectorAll(".card .name")).map(e=>e.innerText);
+}
+
+function filter(){
+let keyword = search.value.toLowerCase();
+let visible=0;
+
+cards.forEach(card=>{
+card.classList.remove("highlight");
+let text=card.textContent.toLowerCase();
+
+if(text.includes(keyword)){
+card.style.display="block";
+visible++;
+if(keyword.length>0) card.classList.add("highlight");
+}else{
+card.style.display="none";
+}
+});
+
+resultCount.innerText="🔎 Tìm thấy "+visible+" món";
+}
+
+function showSuggest(){
+let k=search.value.toLowerCase();
+suggest.innerHTML="";
+if(k.length<1) return;
+
+let names=getNames();
+
+names.forEach(n=>{
+if(n.toLowerCase().includes(k)){
+let d=document.createElement("div");
+d.className="sugItem";
+d.innerText=n;
+d.onclick=()=>{
+search.value=n;
+filter();
+suggest.innerHTML="";
+};
+suggest.appendChild(d);
+}
+});
+}
+
+search.addEventListener("keyup",()=>{
+filter();
+showSuggest();
+});
+
+search.addEventListener("focus",showSuggest);
+
+window.onload=()=>{
+search.focus();
+filter();
+};
+
+}
+
+document.addEventListener("DOMContentLoaded", initApp);
+
+</script>
+</body>
 </html>
