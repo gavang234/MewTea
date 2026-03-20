@@ -460,32 +460,7 @@ Size M/L: 1 cục phô mai bò quét ly
 <td>(M) 40syro dâu + 10 nước + 1 tắc + 170 lục trà<br/>(L) 50syro dâu + 10đg + 20 nước + 1 tắc + 190 lục trà</td>
 </tr></table></div>
 <button id="topBtn" onclick="toTop()">⬆</button>
-<script>
-document.addEventListener("DOMContentLoaded", function(){
 
-const cards = document.querySelectorAll(".card");
-const title = document.querySelector("h1");
-
-cards.forEach((card,index)=>{
-let name = card.querySelector(".name");
-if(name){
-name.innerHTML = (index+1) + ". " + name.innerHTML;
-}
-});
-
-let total = cards.length;
-
-let counter = document.createElement("div");
-counter.style.textAlign="center";
-counter.style.marginBottom="20px";
-counter.style.color="#ff3d8b";
-counter.style.fontWeight="bold";
-counter.innerHTML = "📋 Tổng: " + total + " món";
-
-title.insertAdjacentElement("afterend", counter);
-
-});
-</script>
 <div class="card">
 <div class="name">🍈 Trà Mãng Cầu</div>
 <table>
@@ -645,7 +620,6 @@ filter();
 };
 
 </script>
-
 <div class="card"><div class="name">🍵 Trà Sữa Matcha / Matcha Phô Mai</div>
 <table><tr><th>100%</th><th>50%</th><th>10%</th></tr><tr>
 <td>(M) 2 muỗng matcha + 40 nước sôi + 10đg + 40 đặc + 30 rich + 80 lục trà<br/>(L) 3 muỗng matcha + 50 nước sôi + 50 đặc + 20đg + 30 rich + 150 lục trà</td>
@@ -694,5 +668,21 @@ filter();
 <td>(M) 170 sữa + 30đg đen<br/>(L) 200 sữa + 30đg đen</td>
 <td>(M) 180 sữa + 20đg đen<br/>(L) 220 sữa + 20đg đen</td>
 </tr></table></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+function updateTotal(){
+const cards = document.querySelectorAll(".card");
+const resultCount = document.getElementById("resultCount");
+if(!document.getElementById("search").value){
+resultCount.innerText = "📋 Tổng: " + cards.length + " món";
+}
+}
+
+updateTotal();
+
+});
+</script>
 </body>
 </html>
