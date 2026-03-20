@@ -495,14 +495,7 @@ Size M/L: 1 cục phô mai bò quét ly
 </tr>
 </table>
 </div>
-<script>
-document.getElementById("clearSearch").onclick=function(){
-const s=document.getElementById("search");
-s.value="";
-s.dispatchEvent(new Event("keyup"));
-s.focus();
-};
-</script>
+
 <div class="card">
 <div class="name">🥝 Trà Kiwi Thạch Táo</div>
 <div class="note">(1 vá thạch táo)</div>
@@ -551,75 +544,7 @@ s.focus();
 </tr>
 </table>
 </div>
-<script>
 
-function normalize(str){
-return str.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
-}
-
-const search = document.getElementById("search");
-const cards = document.querySelectorAll(".card");
-const resultCount = document.getElementById("resultCount");
-const suggest = document.getElementById("suggest");
-
-function getNames(){
-return Array.from(document.querySelectorAll(".card .name")).map(e=>e.innerText);
-}
-
-const TOTAL = cards.length;
-
-function filter(){
-let keyword = normalize(search.value);
-let visible = 0;
-
-cards.forEach(card=>{
-let text = normalize(card.textContent);
-
-if(text.includes(keyword)){
-card.style.display="block";
-visible++;
-}else{
-card.style.display="none";
-}
-});
-
-if(keyword.length === 0){
-resultCount.innerText = "📋 Tổng: " + TOTAL + " món";
-}else{
-resultCount.innerText = "🔎 Tìm thấy " + visible + " món";
-}
-}
-
-function showSuggest(){
-let k = normalize(search.value);
-suggest.innerHTML="";
-if(k.length<1) return;
-
-let names=getNames();
-
-names.forEach(n=>{
-if(normalize(n).includes(k)){
-let d=document.createElement("div");
-d.className="sugItem";
-d.innerText=n;
-d.onclick=()=>{
-search.value=n;
-filter();
-suggest.innerHTML="";
-};
-suggest.appendChild(d);
-}
-});
-}
-
-search.addEventListener("keyup",()=>{filter();showSuggest();});
-
-window.onload=()=>{
-search.focus();
-filter();
-};
-
-</script>
 <div class="card"><div class="name">🍵 Trà Sữa Matcha / Matcha Phô Mai</div>
 <table><tr><th>100%</th><th>50%</th><th>10%</th></tr><tr>
 <td>(M) 2 muỗng matcha + 40 nước sôi + 10đg + 40 đặc + 30 rich + 80 lục trà<br/>(L) 3 muỗng matcha + 50 nước sôi + 50 đặc + 20đg + 30 rich + 150 lục trà</td>
@@ -670,19 +595,85 @@ filter();
 </tr></table></div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
 
-function updateTotal(){
-const cards = document.querySelectorAll(".card");
+function normalize(str){
+return str.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+}
+
+const search = document.getElementById("search");
 const resultCount = document.getElementById("resultCount");
-if(!document.getElementById("search").value){
-resultCount.innerText = "📋 Tổng: " + cards.length + " món";
-}
+const suggest = document.getElementById("suggest");
+
+function getCards(){
+return document.querySelectorAll(".card");
 }
 
-updateTotal();
-
+function updateNumbering(){
+const cards=getCards();
+cards.forEach((card,i)=>{
+let name=card.querySelector(".name");
+if(name && !name.innerText.startsWith((i+1)+".")){
+name.innerText=(i+1)+". "+name.innerText.replace(/^\d+\. /,'');
+}
 });
+}
+
+function filter(){
+let keyword = normalize(search.value);
+let cards = getCards();
+let visible=0;
+
+cards.forEach(card=>{
+let text = normalize(card.textContent);
+
+if(text.includes(keyword)){
+card.style.display="block";
+visible++;
+}else{
+card.style.display="none";
+}
+});
+
+if(keyword.length===0){
+resultCount.innerText="📋 Tổng: "+cards.length+" món";
+}else{
+resultCount.innerText="🔎 Tìm thấy "+visible+" món";
+}
+}
+
+function showSuggest(){
+let k=normalize(search.value);
+suggest.innerHTML="";
+if(k.length<1) return;
+
+document.querySelectorAll(".card .name").forEach(n=>{
+if(normalize(n.innerText).includes(k)){
+let d=document.createElement("div");
+d.className="sugItem";
+d.innerText=n.innerText;
+d.onclick=()=>{
+search.value=n.innerText;
+filter();
+suggest.innerHTML="";
+};
+suggest.appendChild(d);
+}
+});
+}
+
+search.addEventListener("keyup",()=>{filter();showSuggest();});
+
+document.getElementById("clearSearch").onclick=function(){
+search.value="";
+filter();
+search.focus();
+};
+
+window.onload=()=>{
+updateNumbering();
+filter();
+};
+
 </script>
 </body>
 </html>
